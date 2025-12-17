@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цены - Fix&Go - ремонт бытовой техники</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body class="prices_page">
+    <div class="container">
+        <header class="header">
+            <div class="logo">Fix&Go</div>
+            <nav class="nav">
+                <a href="index.html">Главная</a>
+                <a href="services.html">Услуги</a>
+                <a href="service-card.html">Карточка услуги</a>
+                <a href="prices.html" class="active">Цены</a>
+                <a href="contacts.html">Контакты</a>
+            </nav>
+            <button class="header-cta">Вызвать мастера</button>
+        </header>
+
+        <section class="prices-section">
+            <h1 class="section-title">Цены</h1>
+            
+            <div class="price-table">
+                <div class="table-header">
+                    <div class="header-cell">Услуга</div>
+                    <div class="header-cell">Описание</div>
+                    <div class="header-cell">От, ₽</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">Диагностика</div>
+                    <div class="table-cell">Зачтётся в стоимость ремонта</div>
+                    <div class="table-cell">0</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">Замена насоса</div>
+                    <div class="table-cell">Стиральная машина</div>
+                    <div class="table-cell">1990</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">Заправка фреона</div>
+                    <div class="table-cell">Холодильник</div>
+                    <div class="table-cell">2490</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="calculator-section">
+            <div class="calculator-container">
+                <h2 class="calculator-title">Калькулятор (демо)</h2>
+                <div class="calculator-form">
+                    <div class="calculator-field">
+                        <select class="calculator-select">
+                            <option value="">Тип техники</option>
+                            <option value="washing-machine">Стиральная машина</option>
+                            <option value="microwave">Микроволновка</option>
+                            <option value="oven">Духовка</option>
+                            <option value="vent">Вытяжка</option>
+                            <option value="dishwasher">Посудомоечная машина</option>
+                        </select>
+                    </div>
+                    <div class="calculator-field">
+                        <select class="calculator-select">
+                            <option value="">Проблема</option>
+                            <option value="noise">Шумит</option>
+                            <option value="not-turn_on">Не включается</option>
+                            <option value="not-draining">Не сливает воду</option>
+                            <option value="another">Другое</option>
+                            
+                        </select>
+                    </div>
+                    <button class="calculator-button">Рассчитать</button>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="footer-text">
+                © Fix&Go - выездной ремонт техники • Политика конфиденциальности • Публичная оферта
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix&Go - ремонт бытовой техники</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        .services-slider {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .services-grid {
+            display: flex;
+            transition: transform 0.5s ease;
+            gap: 30px;
+        }
+
+        .service-card {
+            flex: 0 0 calc(50% - 15px);
+            min-width: calc(50% - 15px);
+        }
+
+        .service-image {
+            cursor: pointer;
+        }
+
+        .slider-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            padding-bottom: 3px;
+        }
+
+        .slider-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #6C8C9E;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .slider-dot.active {
+            background: #519A90;
+            transform: scale(1.2);
+        }
+
+        .slider-arrows {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-90%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .slider-arrow {
+            background: #519A90;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            pointer-events: all;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider-arrow:hover {
+            background: #465E6B;
+            transform: scale(1.1);
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .popup-image {
+            width: 100%;
+            height: auto;
+            border-radius: 17px;
+        }
+
+        .close-popup {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .error {
+            border-color: #e74c3c !important;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .service-card {
+                flex: 0 0 100%;
+                min-width: 100%;
+            }
+            
+            .slider-arrows {
+                padding: 0 10px;
+            }
+            
+            .slider-arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slider-arrow {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">Fix&Go</div>
+            <nav class="nav">
+                <a href="index.html" class="active">Главная</a>
+                <a href="services.html">Услуги</a>
+                <a href="service-card.html">Карточка услуги</a>
+                <a href="prices.html">Цены</a>
+                <a href="contacts.html">Контакты</a>
+            </nav>
+            <button class="header-cta">Вызвать мастера</button>
+        </header>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Ремонт бытовой техники <br>— сегодня</h1>
+                <p class="hero-text">
+                    Быстро. Честно. С гарантией до 12 месяцев.<br>
+                    Выезд мастера в день обращения.
+                </p>
+                <div class="hero-buttons">
+                    <button class="cta-button">Вызвать мастера</button>
+                    <button class="price-button">Рассчитать цену</button>
+                </div>
+                <div class="response-time">Среднее время ответа: 10 минут</div>
+            </div>
+            <div class="quick-form">
+                <h2 class="form-title">Быстрая заявка</h2>
+                <form class="form-grid" id="request-form">
+                    <div class="form-group">
+                        <select class="form-select" id="tech-type">
+                            <option value="">Тип техники</option>
+                            <option value="washing-machine">Стиральная машина</option>
+                            <option value="microwave">Микроволновка</option>
+                            <option value="oven">Духовка</option>
+                            <option value="vent">Вытяжка</option>
+                            <option value="dishwasher">Посудомоечная машина</option>
+                        </select>
+                        <div class="error-message" id="tech-type-error">Необходимо выбрать тип техники</div>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" class="form-input" id="phone" placeholder="Телефон*">
+                        <div class="error-message" id="phone-error">Телефон должен содержать 11-12 цифр</div>
+                    </div>
+                    <div class="form-group full-width">
+                        <textarea class="form-textarea" id="problem" placeholder="Кратко опишите проблему" maxlength="200"></textarea>
+                        <div class="error-message" id="problem-error">Описание проблемы не должно превышать 200 символов</div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" id="address" placeholder="Адрес/район*">
+                        <div class="error-message" id="address-error">Адрес должен содержать от 5 до 100 символов</div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" id="date" placeholder="дд.мм.гггг">
+                        <div class="error-message" id="date-error">Пожалуйста, введите дату в формате дд.мм.гггг</div>
+                    </div>
+                    <button type="submit" class="submit-button">Отправить заявку</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="services-section">
+            <h2 class="section-title">Услуги</h2>
+            <div class="services-slider">
+                <div class="services-grid" id="services-grid">
+                    <div class="service-card">
+                        <img src="img/image1.png" alt="Стиральные машины" class="service-image" data-popup="img/image1.png">
+                        <div class="service-info">
+                            <div class="service-title">Стиральные машины</div>
+                            <div class="service-description">Диагностика от 0 ₽, ремонт от 990₽</div>
+                        </div>
+                    </div>
+                    <div class="service-card">
+                        <img src="img/image2.png" alt="Холодильники" class="service-image" data-popup="img/image2.png">
+                        <div class="service-info">
+                            <div class="service-title">Холодильники</div>
+                            <div class="service-description">Заправка, замена реле, ремонт платы</div>
+                        </div>
+                    </div>
+                    <div class="service-card">
+                        <img src="img/image3.png" alt="Посудомоечные машины" class="service-image" data-popup="img/image3.png">
+                        <div class="service-info">
+                            <div class="service-title">Посудомоечные машины</div>
+                            <div class="service-description">Течёт, не греет, не сливает — исправим</div>
+                        </div>
+                    </div>
+                    <div class="service-card">
+                        <img src="img/image4.png" alt="Духовые шкафы" class="service-image" data-popup="img/image4.png">
+                        <div class="service-info">
+                            <div class="service-title">Духовые шкафы</div>
+                            <div class="service-description">Не греет/не включается — устраним</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slider-arrows">
+                    <button class="slider-arrow" id="prev-slide">‹</button>
+                    <button class="slider-arrow" id="next-slide">›</button>
+                </div>
+                
+                <div class="slider-nav" id="slider-nav"></div>
+            </div>
+        </section>
+
+        <section class="how-it-works">
+            <h2 class="section-title">Как это работает</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-box">
+                        <div class="step-text">Заявка</div>
+                    </div>
+                </div>
+                <img src="./img/arrow.png" alt="arrow">
+                <div class="step">
+                    <div class="step-box">
+                        <div class="step-text">Звонок</div>
+                    </div>
+                </div>
+                <img src="./img/arrow.png" alt="arrow">
+                <div class="step">
+                    <div class="step-box">
+                        <div class="step-text">Выезд</div>
+                    </div>
+                </div>
+                <img src="./img/arrow.png" alt="arrow">
+                <div class="step">
+                    <div class="step-box">
+                        <div class="step-text">Гарантия</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="reviews-section">
+            <h2 class="section-title">Отзывы</h2>
+            <div class="star_reviews-count">
+                <img src="./img/star.png" alt="star">
+                <div class="reviews-count">1200+ выполненных работ</div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="footer-text">
+                © Fix&Go - операцией ремонта техники • Политика конфиденциальности • Публичная оферта
+            </div>
+        </footer>
+    </div>
+
+    <div class="popup" id="image-popup">
+        <div class="popup-content">
+            <button class="close-popup" id="close-popup">&times;</button>
+            <img src="" alt="" class="popup-image" id="popup-image">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const servicesGrid = document.getElementById('services-grid');
+            const sliderNav = document.getElementById('slider-nav');
+            const prevButton = document.getElementById('prev-slide');
+            const nextButton = document.getElementById('next-slide');
+            const serviceCards = document.querySelectorAll('.service-card');
+            
+            let currentSlide = 0;
+            const totalSlides = serviceCards.length;
+            
+            function getSlidesToShow() {
+                return window.innerWidth <= 768 ? 1 : 2;
+            }
+            
+            function getMaxSlide() {
+                return totalSlides - getSlidesToShow();
+            }
+            
+            function createDots() {
+                sliderNav.innerHTML = '';
+                const maxSlide = getMaxSlide();
+                const totalDots = maxSlide + 1;
+                
+                for (let i = 0; i < totalDots; i++) {
+                    const dot = document.createElement('div');
+                    dot.classList.add('slider-dot');
+                    if (i === currentSlide) dot.classList.add('active');
+                    dot.addEventListener('click', () => goToSlide(i));
+                    sliderNav.appendChild(dot);
+                }
+            }
+            
+            function goToSlide(slideIndex) {
+                currentSlide = slideIndex;
+                const maxSlide = getMaxSlide();
+                
+                const cardWidth = serviceCards[0].offsetWidth + 30;
+                const translateX = -currentSlide * cardWidth;
+                servicesGrid.style.transform = `translateX(${translateX}px)`;
+                
+                document.querySelectorAll('.slider-dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlide);
+                });
+            }
+            
+            function nextSlide() {
+                const maxSlide = getMaxSlide();
+                if (currentSlide < maxSlide) {
+                    goToSlide(currentSlide + 1);
+                } else {
+                    goToSlide(0);
+                }
+            }
+            
+            function prevSlide() {
+                const maxSlide = getMaxSlide();
+                if (currentSlide > 0) {
+                    goToSlide(currentSlide - 1);
+                } else {
+                    goToSlide(maxSlide);
+                }
+            }
+            
+            prevButton.addEventListener('click', prevSlide);
+            nextButton.addEventListener('click', nextSlide);
+            
+            function handleResize() {
+                createDots();
+                goToSlide(currentSlide);
+            }
+            
+            window.addEventListener('resize', handleResize);
+            
+            createDots();
+            goToSlide(0);
+            
+            let autoSlideInterval = setInterval(nextSlide, 5000);
+            
+            servicesGrid.addEventListener('mouseenter', function() {
+                clearInterval(autoSlideInterval);
+            });
+            
+            servicesGrid.addEventListener('mouseleave', function() {
+                autoSlideInterval = setInterval(nextSlide, 5000);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const popup = document.getElementById('image-popup');
+            const popupImage = document.getElementById('popup-image');
+            const closePopup = document.getElementById('close-popup');
+            
+            document.querySelectorAll('.service-image').forEach(image => {
+                image.addEventListener('click', function() {
+                    popupImage.src = this.getAttribute('data-popup');
+                    popupImage.alt = this.alt;
+                    popup.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+            
+            closePopup.addEventListener('click', function() {
+                popup.style.display = 'none';
+                document.body.style.overflow = '';
+            });
+            
+            popup.addEventListener('click', function(e) {
+                if (e.target === popup) {
+                    popup.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && popup.style.display === 'flex') {
+                    popup.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('request-form');
+            const techType = document.getElementById('tech-type');
+            const phone = document.getElementById('phone');
+            const problem = document.getElementById('problem');
+            const address = document.getElementById('address');
+            const date = document.getElementById('date');
+            
+            function validatePhone() {
+                const digitsOnly = phone.value.replace(/\D/g, '');
+                return digitsOnly.length >= 11 && digitsOnly.length <= 12;
+            }
+            
+            function validateSelect() {
+                return techType.value !== '';
+            }
+            
+            function validateAddress() {
+                return address.value.length >= 5 && address.value.length <= 100;
+            }
+            
+            function validateDate() {
+                if (date.value === '') return true;
+                const pattern = /^\d{2}\.\d{2}\.\d{4}$/;
+                return pattern.test(date.value);
+            }
+            
+            function validateProblem() {
+                return problem.value.length <= 200;
+            }
+            
+            function showError(field, errorId, isValid) {
+                const errorElement = document.getElementById(errorId);
+                if (!isValid) {
+                    field.classList.add('error');
+                    errorElement.style.display = 'block';
+                } else {
+                    field.classList.remove('error');
+                    errorElement.style.display = 'none';
+                }
+                return isValid;
+            }
+            
+            function validateForm() {
+                let isValid = true;
+                
+                if (!validateSelect()) {
+                    showError(techType, 'tech-type-error', false);
+                    isValid = false;
+                } else {
+                    showError(techType, 'tech-type-error', true);
+                }
+                
+                if (!validatePhone()) {
+                    showError(phone, 'phone-error', false);
+                    isValid = false;
+                } else {
+                    showError(phone, 'phone-error', true);
+                }
+                
+                if (!validateAddress()) {
+                    showError(address, 'address-error', false);
+                    isValid = false;
+                } else {
+                    showError(address, 'address-error', true);
+                }
+                
+                if (!validateDate()) {
+                    showError(date, 'date-error', false);
+                    isValid = false;
+                } else {
+                    showError(date, 'date-error', true);
+                }
+                
+                if (!validateProblem()) {
+                    showError(problem, 'problem-error', false);
+                    isValid = false;
+                } else {
+                    showError(problem, 'problem-error', true);
+                }
+                
+                return isValid;
+            }
+            
+            phone.addEventListener('input', function() {
+                this.value = this.value.replace(/\D/g, '');
+            });
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    alert('Форма успешно отправлена!');
+                    form.reset();
+                    document.querySelectorAll('.error-message').forEach(error => {
+                        error.style.display = 'none';
+                    });
+                    document.querySelectorAll('.error').forEach(field => {
+                        field.classList.remove('error');
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
