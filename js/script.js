@@ -1,28 +1,35 @@
-const burgerBtn = document.getElementById('burgerBtn');
-const mobileMenu = document.getElementById('mobileMenu');
-const menuOverlay = document.getElementById('menuOverlay');
-const menuClose = document.getElementById('menuClose');
+const loader = document.getElementById("loader");
+if (loader) {
+  setTimeout(() => {
+    loader.classList.add("hidden");
+  }, 1500);
+}
+
+const burgerBtn = document.getElementById("burgerBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+const menuOverlay = document.getElementById("menuOverlay");
+const menuClose = document.getElementById("menuClose");
 
 function openMobileMenu() {
-  mobileMenu.classList.add('open');
-  menuOverlay.classList.add('open');
-  document.body.classList.add('menu-open');
+  mobileMenu.classList.add("open");
+  menuOverlay.classList.add("open");
+  document.body.classList.add("menu-open");
 }
 
 function closeMobileMenu() {
-  mobileMenu.classList.remove('open');
-  menuOverlay.classList.remove('open');
-  document.body.classList.remove('menu-open');
+  mobileMenu.classList.remove("open");
+  menuOverlay.classList.remove("open");
+  document.body.classList.remove("menu-open");
 }
 
 if (burgerBtn) {
-  burgerBtn.addEventListener('click', openMobileMenu);
+  burgerBtn.addEventListener("click", openMobileMenu);
 }
 
 if (menuClose) {
-  menuClose.addEventListener('click', closeMobileMenu);
+  menuClose.addEventListener("click", closeMobileMenu);
 }
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeMobileMenu();
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeMobileMenu();
 });
